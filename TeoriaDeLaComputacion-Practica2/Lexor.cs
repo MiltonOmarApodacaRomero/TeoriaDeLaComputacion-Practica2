@@ -82,6 +82,7 @@ public class Lexor {
         estado = matrizEstados[estado - 1, (int)TiposDatos.FDC];
         Console.WriteLine(estado);
         // todo: Cambiar por método con código de aceptación o error
+        
     }
     
 }

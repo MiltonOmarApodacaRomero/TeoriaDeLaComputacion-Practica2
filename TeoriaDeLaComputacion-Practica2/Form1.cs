@@ -7,6 +7,6 @@ public partial class Form1 : Form
     }
 
     private void Form1_Load(object sender, EventArgs e) {
-        Lexor.Procesar("312.4");
+        Lexor.Procesar("asdad123dasd");
     }
 }

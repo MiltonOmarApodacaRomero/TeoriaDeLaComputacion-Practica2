@@ -6,15 +6,27 @@ namespace TeoriaDeLaComputacion_Practica2;
 public class Lexor
 {
 
-    private Form1 formulario;
-    public Lexor(Form1 form)
+    public static Form1 formulario;
+    public static void Setup(Form1 form)
     {
         formulario = form;
+        
     }
+
     public static readonly HashSet<char> LetrasSet = new HashSet<char> {
         'a', 'b', 'c', 'd', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
         'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
         'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+    };
+
+    public static readonly HashSet<string> PalabrasReservadas = new HashSet<string> {
+       "int","double","string","char","boolean","if","else","while","for","return",
+        "do","switch","case","break","continue","default","try","catch","finally","throw",
+        "public","private","protected","static","void","class","interface","enum","extends","implements",
+        "import","package","new","this","super","null","true","false",
+        "abstract","assert","boolean","byte","char","const","default","System","final","Console",
+        "WriteLine","ReadLine","Math","Random","List","ArrayList","HashMap","HashSet","LinkedList",
+        "Vector","foreach"
     };
 
     public static readonly HashSet<char> DigitosSet = new HashSet<char> {
@@ -168,7 +180,7 @@ public class Lexor
             {
                 MessageBox.Show("Cambiar a algo que diga error");
                 // todo: Cambiar por método con código de aceptación o error.
-
+                formulario.txtSalida.Text = "cod de error aca";
                 break;
             }
         }

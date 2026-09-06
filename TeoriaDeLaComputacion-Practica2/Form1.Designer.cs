@@ -41,7 +41,7 @@ partial class Form1
         // 
         label1.AutoSize = true;
         label1.Font = new Font("Segoe UI", 28.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-        label1.Location = new Point(108, 56);
+        label1.Location = new Point(108, 52);
         label1.Name = "label1";
         label1.Size = new Size(313, 62);
         label1.TabIndex = 0;
@@ -51,7 +51,7 @@ partial class Form1
         // 
         label2.AutoSize = true;
         label2.Font = new Font("Segoe UI", 13.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-        label2.Location = new Point(45, 138);
+        label2.Location = new Point(45, 132);
         label2.Name = "label2";
         label2.Size = new Size(325, 31);
         label2.TabIndex = 1;

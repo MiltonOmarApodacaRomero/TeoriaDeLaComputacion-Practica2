@@ -3,8 +3,14 @@
 namespace TeoriaDeLaComputacion_Practica2;
 
 
-public class Lexor {
-    
+public class Lexor
+{
+
+    private Form1 formulario;
+    public Lexor(Form1 form)
+    {
+        formulario = form;
+    }
     public static readonly HashSet<char> LetrasSet = new HashSet<char> {
         'a', 'b', 'c', 'd', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
         'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -18,13 +24,13 @@ public class Lexor {
     public static readonly HashSet<char> SS_1Set = new HashSet<char> {
         '!', '*', '/', '>', '<'
     };
-    
+
     public static readonly HashSet<char> SS_2Set = new HashSet<char> {
         '@', '?', ';', '$', '#', ','
     };
-    
+
     // El enumerador "TiposDatos" funciona como una herramienta de apoyo para acceder más fácilmente a los índices de la matriz (Letra = 0, Dígito = 1,  E = 2, etcétera).
-    public enum TiposDatos 
+    public enum TiposDatos
     {
         Letra,
         Digito,
@@ -47,9 +53,9 @@ public class Lexor {
         Espacio,
         FDC
     }
-    
+
     public static readonly Dictionary<char, TiposDatos> CaracteresSet = new Dictionary<char, TiposDatos>();
-    
+
     //  ORDEN DE LA MATRÍZ ->
     //  Letras [a-Z] │ Dígitos [0-9] │ E │ { │ } │ ( │ ) │ [ │ ] │ + │ - │ _ │ " │ = │ . │ : │ SS_1 │ SS_2 │ Espacio │ FDC  
     //  26 Renglones │ 20 Columnas
@@ -84,22 +90,25 @@ public class Lexor {
 
     public static int minCodError = 64;
 
-    private static void RegistrarSets() {
-        
+    private static void RegistrarSets()
+    {
+
         // ╔════════╗
         // ║ LETRAS ║
         // ╚════════╝
-        foreach (char c in LetrasSet) {
+        foreach (char c in LetrasSet)
+        {
             CaracteresSet[c] = TiposDatos.Letra;
         }
-        
+
         // ╔═════════╗
         // ║ DÍGITOS ║
         // ╚═════════╝
-        foreach (char c in DigitosSet) {
+        foreach (char c in DigitosSet)
+        {
             CaracteresSet[c] = TiposDatos.Digito;
         }
-        
+
         // ╔═════════════════════════╗
         // ║ CARÁCTERES INDIVIDUALES ║
         // ╚═════════════════════════╝
@@ -117,56 +126,60 @@ public class Lexor {
         CaracteresSet['='] = TiposDatos.Igual;
         CaracteresSet['.'] = TiposDatos.Punto;
         CaracteresSet[':'] = TiposDatos.DosPuntos;
-        
+
         // ╔════════════════════════════╗
         // ║ SET DE SÍMBOLOS 1 -> !/*>< ║
         // ╚════════════════════════════╝
-        foreach (char c in SS_1Set) {
+        foreach (char c in SS_1Set)
+        {
             CaracteresSet[c] = TiposDatos.SS_1;
         }
-        
+
         // ╔═════════════════════════════╗
         // ║ SET DE SÍMBOLOS 2 -> @?;$#, ║
         // ╚═════════════════════════════╝
-        foreach (char c in SS_2Set) {
+        foreach (char c in SS_2Set)
+        {
             CaracteresSet[c] = TiposDatos.SS_2;
         }
-        
+
         // ╔═════════╗
         // ║ ESPACIO ║
         // ╚═════════╝
         CaracteresSet[' '] = TiposDatos.Espacio;
-        
-        
+
+
     }
 
-    public static void Procesar(string input) {
+    public static void Procesar(string input)
+    {
         RegistrarSets();
-        
+
         int estado = 1;
         char[] inp = input.ToCharArray(); // Convertir el input ingresado a un array de caracteres
-
-        
         Console.WriteLine(estado); // Imprimir estado inicial (de 1).
-        
-        foreach (char c in inp) {
+        foreach (char c in inp)
+        {
             estado = matrizEstados[estado - 1, (int)CaracteresSet[c]];
             Console.WriteLine(estado);
-            
+
             // Mostrar error en caso de introducir un símbolo o carácter que no se esperaba.
-            if (estado >= matrizEstados.Length && estado >= minCodError) {
-                Console.WriteLine("DIO ERROR NONO MUY MAL"); // todo: Cambiar por método con código de aceptación o error.
+            if (estado >= matrizEstados.Length && estado >= minCodError)
+            {
+                MessageBox.Show("Cambiar a algo que diga error");
+                // todo: Cambiar por método con código de aceptación o error.
+
                 break;
             }
         }
-        
         // Mostrar conclusión tras un FDC si no hubo un error anteriormente.
-        if (estado < matrizEstados.Length) {
+        if (estado < matrizEstados.Length)
+        {
             estado = matrizEstados[estado - 1, (int)TiposDatos.FDC];
             Console.WriteLine(estado);
             // todo: Cambiar por método con código de aceptación o error (aquí se llamaría todo lo referente al FDC).
         }
-        
+
     }
-    
+
 }

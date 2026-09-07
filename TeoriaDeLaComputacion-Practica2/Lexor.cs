@@ -41,8 +41,7 @@ public class Lexor
     public static readonly HashSet<char> SS_2Set = new HashSet<char> {
         '@', '?', ';', '$', '#', ','
     };
-
-    // El enumerador "TiposDatos" funciona como una herramienta de apoyo para acceder más fácilmente a los índices de la matriz (Letra = 0, Dígito = 1,  E = 2, etcétera).
+    
     public enum TiposDatos
     {
         Letra,
@@ -98,10 +97,6 @@ public class Lexor
             { 999, "El argumento ':' solo debe finalizar por sí mismo o al ser proseguido inmediatamente por otro ':'." }
     };
     
-
-    //  ORDEN DE LA MATRÍZ ->
-    //  Letras [a-Z] │ Dígitos [0-9] │ E │ { │ } │ ( │ ) │ [ │ ] │ + │ - │ _ │ " │ = │ . │ : │ SS_1 │ SS_2 │ Espacio │ FDC  
-    //  26 Renglones │ 20 Columnas
     public static int[,] matrizEstados = {
         {2, 3, 2, 21, 22, 19, 20, 25, 26, 16, 4, 2, 10, 14, 18, 23, 14, 18, 64, 100},
         {2, 2, 2, 111, 111, 111, 111, 111, 111, 111, 111, 2, 111, 111, 111, 111, 111, 111, 111, 0},
@@ -136,25 +131,16 @@ public class Lexor
     private static void RegistrarSets()
     {
 
-        // ╔════════╗
-        // ║ LETRAS ║
-        // ╚════════╝
         foreach (char c in LetrasSet)
         {
             CaracteresSet[c] = TiposDatos.Letra;
         }
 
-        // ╔═════════╗
-        // ║ DÍGITOS ║
-        // ╚═════════╝
         foreach (char c in DigitosSet)
         {
             CaracteresSet[c] = TiposDatos.Digito;
         }
 
-        // ╔═════════════════════════╗
-        // ║ CARÁCTERES INDIVIDUALES ║
-        // ╚═════════════════════════╝
         CaracteresSet['E'] = TiposDatos.E;
         CaracteresSet['{'] = TiposDatos.InLlave;
         CaracteresSet['}'] = TiposDatos.FnLlave;
@@ -169,26 +155,17 @@ public class Lexor
         CaracteresSet['='] = TiposDatos.Igual;
         CaracteresSet['.'] = TiposDatos.Punto;
         CaracteresSet[':'] = TiposDatos.DosPuntos;
-
-        // ╔════════════════════════════╗
-        // ║ SET DE SÍMBOLOS 1 -> !/*>< ║
-        // ╚════════════════════════════╝
+        
         foreach (char c in SS_1Set)
         {
             CaracteresSet[c] = TiposDatos.SS_1;
         }
-
-        // ╔═════════════════════════════╗
-        // ║ SET DE SÍMBOLOS 2 -> @?;$#, ║
-        // ╚═════════════════════════════╝
+        
         foreach (char c in SS_2Set)
         {
             CaracteresSet[c] = TiposDatos.SS_2;
         }
 
-        // ╔═════════╗
-        // ║ ESPACIO ║
-        // ╚═════════╝
         CaracteresSet[' '] = TiposDatos.Espacio;
 
 
@@ -210,8 +187,8 @@ public class Lexor
         RegistrarSets();
 
         int estado = 1;
-        char[] inp = input.ToCharArray(); // Convertir el input ingresado a un array de caracteres
-        Console.WriteLine(estado); // Imprimir estado inicial (de 1).
+        char[] inp = input.ToCharArray();
+        Console.WriteLine(estado);
         
         
         foreach (char c in inp)
@@ -230,18 +207,15 @@ public class Lexor
             
             estado = matrizEstados[estado - 1, (int)CaracteresSet[c]];
             Console.WriteLine(estado);
-
-            // Mostrar error en caso de introducir un símbolo o carácter que no se esperaba.
+            
             if (estado >= matrizEstados.GetLength(0) && estado >= minCodError)
             {
                 MessageBox.Show("Error[" + estado + "]: " + msgError[estado]);
-                // todo: Cambiar por método con código de aceptación o error.
                 formulario.txtSalida.Text = "Error[" + estado + "]: " + msgError[estado];
                 break;
             }
         }
         
-        // Mostrar conclusión tras un FDC si no hubo un error anteriormente.
         if (estado < matrizEstados.GetLength(0))
         {
             estado = matrizEstados[estado - 1, (int)TiposDatos.FDC];

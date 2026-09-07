@@ -24,4 +24,8 @@ public partial class Form1 : Form
     {
 
     }
+
+    private void btnLimpiar_Click(object sender, EventArgs e) {
+        txtSalida.Text = "";
+    }
 }

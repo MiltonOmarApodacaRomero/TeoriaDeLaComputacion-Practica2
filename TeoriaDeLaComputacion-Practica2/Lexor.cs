@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace TeoriaDeLaComputacion_Practica2;
 
@@ -68,6 +69,36 @@ public class Lexor
 
     public static readonly Dictionary<char, TiposDatos> CaracteresSet = new Dictionary<char, TiposDatos>();
 
+    public static readonly Dictionary<int, String> msgError = new Dictionary<int, string>()
+    {
+            { 64, "No se puede iniciar un argumento con un ESPACIO." },
+            { 100, "No se permite iniciar un argumento vacío." },
+            { 111, "Argumentos iniciados con Alfanuméricos o '_' solo pueden contener otros Alfanuméricos y/o '_'." },
+            { 128, "Los argumentos Numéricos solo deben contener otros Números, Puntos o Exponenciales 'E'." },
+            { 200, "El argumento '-' solo debe negar Numéricos, o finalizar ya sea por sí mismo o seguido inmediatamente por '=' o '-'." },
+            { 212, "Los argumentos Numericos con decimal, solo permiten más digitos o una 'E' de exponencial." },
+            { 222, "Los argumentos Decimales despues del '.' deben de ser seguidos por al menos un digito." },
+            { 256, "Los argumentos Numericos con Exponencial 'E' deben finalizar con al menos un Número." },
+            { 300, "Los argumentos Numericos con Exponencial 'E' que incluyan '+' o '-' deben finalizar con al menos un Número." },
+            { 333, "La Comilla Doble debe siempre terminar por una segunda Comilla Doble, sin importar si su contenido es NULO o no." },
+            { 400, "La segunda Comilla Doble no debe recibir ningún otro argumento." },
+            { 444, "No se permiten otro argumento posterior a '=' o '-'." },
+            { 500, "Se esperaba el fin inmediato tras el primer argumento o un '='." },
+            { 512, "Se esperaba el fin inmediato tras un argumento seguido de un '='" },
+            { 524, "No se permiten otro argumento posterior a '=' o '+'." },
+            { 536, "Se esperaba el fin inmediato tras la expresión '::'." },
+            { 555, "Se esperaba el fin inmediatro tras el primer argumento o un segundo argumento de tipo '=' o '+'." },
+            { 600, "Se esperaba el fin inmediatro tras el primer argumento." },
+            { 666, "El argumento '(' solo debe finalizar por sí mismo o al ser proseguido inmediatamente por un ')'." },
+            { 700, "El argumento '{' solo debe finalizar por sí mismo o al ser proseguido inmediatamente por un '}'." },
+            { 777, "El argumento '[' solo debe finalizar por sí mismo o al ser proseguido inmediatamente por un ']'." },
+            { 800, "El argumento ')' debe finalizar por sí mismo." },
+            { 888, "El argumento '}' debe finalizar por sí mismo." },
+            { 900, "El argumento ']' debe finalizar por sí mismo." },
+            { 999, "El argumento ':' solo debe finalizar por sí mismo o al ser proseguido inmediatamente por otro ':'." }
+    };
+    
+
     //  ORDEN DE LA MATRÍZ ->
     //  Letras [a-Z] │ Dígitos [0-9] │ E │ { │ } │ ( │ ) │ [ │ ] │ + │ - │ _ │ " │ = │ . │ : │ SS_1 │ SS_2 │ Espacio │ FDC  
     //  26 Renglones │ 20 Columnas
@@ -101,7 +132,7 @@ public class Lexor
     };
 
     public static int minCodError = 64;
-
+    
     private static void RegistrarSets()
     {
 
@@ -167,33 +198,68 @@ public class Lexor
     {
         if (PalabrasReservadas.Contains(input)) {
             Console.WriteLine("No puedes ingresar palabras reservadas.");
+            MessageBox.Show("No puedes ingresar palabras reservadas.");
+            
+            if (formulario != null)
+            {
+               formulario.txtSalida.text = "No puedes ingresar palabras reservadas.";
+            }
             return;
         }
+        
         RegistrarSets();
 
         int estado = 1;
         char[] inp = input.ToCharArray(); // Convertir el input ingresado a un array de caracteres
         Console.WriteLine(estado); // Imprimir estado inicial (de 1).
+        
+        
         foreach (char c in inp)
         {
+            if (!CaracteresSet.ContainsKey(c))
+            {
+                MessageBox.Show("Se introdujeron Caracteres Ilegales a la cadena!");
+                
+                if (formulario != null)
+                {
+                    formulario.txtSalida.Text = "Se introdujeron Caracteres Ilegales a la cadena!";
+                }
+                
+                return;
+            }
+            
             estado = matrizEstados[estado - 1, (int)CaracteresSet[c]];
             Console.WriteLine(estado);
 
             // Mostrar error en caso de introducir un símbolo o carácter que no se esperaba.
             if (estado >= matrizEstados.GetLength(0) && estado >= minCodError)
             {
-                MessageBox.Show("Cambiar a algo que diga error");
+                MessageBox.Show("Error[" + estado + "]: " + msgError[estado]);
                 // todo: Cambiar por método con código de aceptación o error.
-                formulario.txtSalida.Text = "cod de error aca";
+                formulario.txtSalida.Text = "Error[" + estado + "]: " + msgError[estado];
                 break;
             }
         }
+        
         // Mostrar conclusión tras un FDC si no hubo un error anteriormente.
         if (estado < matrizEstados.GetLength(0))
         {
             estado = matrizEstados[estado - 1, (int)TiposDatos.FDC];
-            Console.WriteLine(estado);
-            // todo: Cambiar por método con código de aceptación o error (aquí se llamaría todo lo referente al FDC).
+
+            if (estado == 0)
+            {
+                Console.WriteLine("Cadena Valida");
+                
+                if (formulario != null)
+                {
+                  formulario.txtSalida.Text = "Cadena Valida"; 
+                  MessageBox.Show("Cadena Valida");
+                  return;
+                }
+                
+            }
+            
+            Console.WriteLine("Error[" + estado + "]: " + msgError[estado]);
         }
 
     }

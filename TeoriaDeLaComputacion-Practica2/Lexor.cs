@@ -202,7 +202,7 @@ public class Lexor
             
             if (formulario != null)
             {
-               formulario.txtSalida.text = "No puedes ingresar palabras reservadas.";
+               formulario.txtSalida.Text = "No puedes ingresar palabras reservadas.";
             }
             return;
         }
@@ -259,7 +259,8 @@ public class Lexor
                 
             }
             
-            Console.WriteLine("Error[" + estado + "]: " + msgError[estado]);
+            MessageBox.Show("Error[" + estado + "]: " + msgError[estado]);
+            formulario.txtSalida.Text = "Error[" + estado + "]: " + msgError[estado];
         }
 
     }

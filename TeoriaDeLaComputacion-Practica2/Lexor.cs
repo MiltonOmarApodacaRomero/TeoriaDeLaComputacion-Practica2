@@ -14,8 +14,8 @@ public class Lexor
     }
 
     public static readonly HashSet<char> LetrasSet = new HashSet<char> {
-        'a', 'b', 'c', 'd', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
-        'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
+        'x', 'y', 'z', 'A', 'B', 'C', 'D', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
         'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
 
@@ -165,6 +165,10 @@ public class Lexor
 
     public static void Procesar(string input)
     {
+        if (PalabrasReservadas.Contains(input)) {
+            Console.WriteLine("No puedes ingresar palabras reservadas.");
+            return;
+        }
         RegistrarSets();
 
         int estado = 1;
@@ -176,7 +180,7 @@ public class Lexor
             Console.WriteLine(estado);
 
             // Mostrar error en caso de introducir un símbolo o carácter que no se esperaba.
-            if (estado >= matrizEstados.Length && estado >= minCodError)
+            if (estado >= matrizEstados.GetLength(0) && estado >= minCodError)
             {
                 MessageBox.Show("Cambiar a algo que diga error");
                 // todo: Cambiar por método con código de aceptación o error.
@@ -185,7 +189,7 @@ public class Lexor
             }
         }
         // Mostrar conclusión tras un FDC si no hubo un error anteriormente.
-        if (estado < matrizEstados.Length)
+        if (estado < matrizEstados.GetLength(0))
         {
             estado = matrizEstados[estado - 1, (int)TiposDatos.FDC];
             Console.WriteLine(estado);
